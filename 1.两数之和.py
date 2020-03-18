@@ -40,11 +40,11 @@ class Solution(object):
         # 先扫一边,相同的找出来
         # 找出所有的两个的组合 然后用和减去参数一,对比剩下所有不重复的目标
         # 如果相等就村到list
-        dct = {}
+        dct = {} #这个是空的
         for i, n in enumerate(nums):
             if target - n in dct:
                 return [dct[target - n], i]
-            dct[n] = i
+            dct[n] = i  #每次放里一个,这样就不存在比较两遍
 # @lc code=end
 
 # 官方推介了三种方法,第一种两次遍历,直接返回i j
