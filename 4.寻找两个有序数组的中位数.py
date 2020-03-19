@@ -45,6 +45,45 @@ class Solution(object):
         :type nums2: List[int]
         :rtype: float
         """
+        m, n = len(nums1), len(nums2)
+        if m > n:
+            nums1, nums2, m, n = nums2, nums1, n, m
+            # 为了拿最小的切
+        if n == 0:
+            raise ValueError
+        imin, imax, half_len = 0, m, (m + n + 1) / 2
+        # imax拿得最小数组的长度
+        while imin <= imax:
+            i = int((imin + imax) / 2)
+            # i.j公式体现
+            j = int(half_len - i)
+            if i < m and nums2[j - 1] > nums1[i]:
+                imin = i + 1
+                # 他的起点是每次调整imin来修正i
+                # 每次让起始点或结束点到当前位置,修正幅度较大
+            elif i > 0 and nums1[i - 1] > nums2[j]:
+                imax = i - 1
+            else:
+                if i == 0:
+                    # 小组最大在b组
+                    max_of_left = nums2[j - 1]
+                elif j == 0:
+                    # 小组最大在a组
+                    max_of_left = nums1[i - 1]
+                else:
+                    # 小组最大在两组最大中最大的
+                    max_of_left = max(nums1[i - 1], nums2[j - 1])
+                if (m + n) % 2 == 1:
+                    return max_of_left
+                if i == m:
+                    # 大组最小在b组
+                    min_of_right = nums2[j]
+                elif j == n:
+                    # 大组最大在a组
+                    min_of_right = nums1[i]
+                else:
+                    min_of_right = min(nums1[i], nums2[j])
+                return (max_of_left + min_of_right) / 2.0
 
 
 # key 题目要求log 即看到log 基本都是二分法
@@ -58,13 +97,11 @@ class Solution(object):
 # 现定义i/j为m/n的中位数,此时有等式 i+j=m-i+n-j 即j=(m+n)/2-i,当式子和为奇数+1(正好取到要的数)
 # 同时偶数时会取余所以可以忽略.即合并为这个公式j=(m+n+1)/2-i.同时为了这个公式不为负数.n要大于等于m
 # 假设i是最大的的数字(m-1),n是最小的m那么j=m-m+1=1还是正数,那么我们如何处理呢?
-# 就是通过找i来判断j,同时ij还一样一个关系:1 即A大组最小大等于于B小组最大
-# 2 B大组最小大等于于A小组最大 当B[j-1]>A[i-1]时 我们将i条
-#  A[i-1]>B[j]
-#
-#
-#
-#
+# 就是通过找i来判断j,同时ij还有这样一个关系:1 即A大组最小大等于于B小组最大 A[i-1]>B[j]
+# 2 B大组最小大等于于A小组最大 B[j-1]>A[i] 当B[j-1]<A[i]时 我们将i调整,放大i,让整个数变小
+# A[i-1]<B[j] 将i缩小,整个数变大. 当到达边界或者符合规定的时候,停止搜索ij
+# 使用公式直接求解 max(A[i−1],B[j−1]), 当 m+nm + nm+n 为奇数时
+# max(A[i−1],B[j−1])+min(A[i],B[j])/2​, 当 m+nm + nm+n 为偶数时
 # TC O(min(m,n))  SC O(1)
 
 # @lc code=end
