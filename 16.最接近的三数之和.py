@@ -95,6 +95,9 @@ class Solution(object):
                     least_delta = delta
                 delta = nums[i] + nums[forward] + nums[backward] - target
         return (target + least_delta)
+        # 他比我好在有一个==0的情况,当相等时这就是最接近的数字了,不用多余比较了
+        # 他比我少一个循环,他在最后一次即-1 -2 -3这个相加在前方判断了,不需要执行循环,可能时间会好一点.
+        # 他把第一次的0 1 2三个数字加起来作为标准,这样比我给一个最小数好很多
 
 
 # @lc code=end
